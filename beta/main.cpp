@@ -50,48 +50,6 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmd, int
 	return message.wParam;
 }
 
-void FillWithRandColors( Field& field )
-{
-	srand( time( 0 ) ) ;
-
-	int colorsAssigned = 0;
-
-	int randRow = 0, randCol = 0, randColor = 0;
-
-	while( colorsAssigned < 3 )
-	{
-		randRow = 0 + rand( ) % NUMSQUARES - 1;
-		randCol = 0 + rand( ) % NUMSQUARES - 1;
-
-		if( !field.Get( randRow, randCol ).isFilled )
-		{
-			randColor = 0 + rand( ) % 5;
-			Color color = BLACK;
-			switch( randColor )
-			{
-			case 0:
-				color = BLUE;
-				break;
-			case 1:
-				color = RED;
-				break;
-			case 2:
-				color = GREEN;
-				break;
-			case 3:
-				color = YELLOW;
-				break;
-			case 4 :
-				color = AQUA;
-			}
-
-			field.SetColor( randRow, randCol, color );
-
-			colorsAssigned ++;
-		}
-	}
-}
-
 LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
 	static Field field;
