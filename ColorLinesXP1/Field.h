@@ -56,9 +56,9 @@ public:
 	void				Move( HDC hDc, int fromRow, int fromCol, int destRow, int destCol );
 
 	Coordinate			GetFirstCircle( const Coordinate& startCoordinate, const Direction& direction ) const;
+	//CircleGroup*		GetSameColoredCircles( const Coordinate& startCoordinate )const;
 	CircleGroup			GetSameColoredCircles( const Coordinate& startCoordinate )const;
-	bool				EraseCircles( const CircleGroup& circleGroup );
-	void				FillWithRandColors( );
+	void				EraseCircles( const CircleGroup& circleGroup );
 };
 
 #endif FIELD_H

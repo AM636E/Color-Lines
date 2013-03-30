@@ -1,17 +1,11 @@
-﻿Build started 3/30/2013 10:53:25 AM.
+﻿Build started 3/23/2013 7:57:02 PM.
 Project "C:\Users\zaz\Documents\Visual Studio 2010\Projects\ColorLinesXP\ColorLinesXP\ColorLinesXP.vcxproj" on node 2 (build target(s)).
 InitializeBuildStatus:
   Creating "Debug\ColorLinesXP.unsuccessfulbuild" because "AlwaysCreate" was specified.
 ClCompile:
-  C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Field.cpp Moves.cpp main.cpp
+  C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
   main.cpp
-c:\users\zaz\documents\visual studio 2010\projects\colorlinesxp\colorlinesxp\main.cpp(55): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-  Generating Code...
-  Compiling...
-  Moves.cpp
-  Field.cpp
-c:\users\zaz\documents\visual studio 2010\projects\colorlinesxp\colorlinesxp\field.cpp(178): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-  Generating Code...
+c:\users\zaz\documents\visual studio 2010\projects\colorlinesxp\colorlinesxp\main.cpp(65): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
 ManifestResourceCompile:
   All outputs are up-to-date.
 Link:
@@ -32,4 +26,4 @@ Done Building Project "C:\Users\zaz\Documents\Visual Studio 2010\Projects\ColorL
 
 Build succeeded.
 
-Time Elapsed 00:00:04.84
+Time Elapsed 00:00:02.75

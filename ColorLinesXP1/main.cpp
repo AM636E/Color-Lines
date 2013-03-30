@@ -50,6 +50,16 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmd, int
 	return message.wParam;
 }
 
+enum Color
+{
+	BLUE	= 0x0000FF00,	
+	RED		= 0xFF000000,
+	GREEN	= 0x00FF0000,
+	YELLOW	= 0xFFFF0000,
+	AQUA	= 0x00FFFF00,
+	BLACK	= 0x00000000
+};
+
 void FillWithRandColors( Field& field )
 {
 	srand( time( 0 ) ) ;
@@ -119,17 +129,18 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 				int destCol = to.x / SQUARE_SIZE - 1;
 				int destRow = to.y / SQUARE_SIZE - 1;
 
+				field.SetColor( fromRow, fromCol, RGB( 250, 250, 0 ) );
+				field.SetIsFilled( fromRow, fromCol, true );
+
 				field.Move( hDc, fromRow, fromCol, destRow, destCol );
 
 				Coordinate coordinate;
 				coordinate.row = destCol;
 				coordinate.col = destRow; 
-				
-				CircleGroup cg = field.GetSameColoredCircles( coordinate );
-
-				if ( !field.EraseCircles( cg ) )
+				if(  ( GetKeyState( VK_CAPITAL ) & 1 ) == 1 )
 				{
-					field.FillWithRandColors( );
+					CircleGroup cg = field.GetSameColoredCircles( coordinate );
+					field.EraseCircles( cg );
 				}
 				a = 0;
 			}

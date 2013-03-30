@@ -1,8 +1,6 @@
 #include "Field.h"
 #include "Moves.h"
 
-#include <ctime>
-
 void Field::Draw( HDC hDc )
 {
 	int left = 0, top = 0;
@@ -57,7 +55,7 @@ void Field::Move( HDC hDc, int fromRow, int fromCol, int destRow, int destCol )
 	int row = 0, col = 0;
 	int nextRow = 0, nextCol = 0;
 
-	for( i = 1; i < size - 1; i ++ )
+	for( int i = 1; i < size - 1; i ++ )
 	{
 		way_i = way[ i ];
 		row = way_i / 10;
@@ -69,7 +67,7 @@ void Field::Move( HDC hDc, int fromRow, int fromCol, int destRow, int destCol )
 		nextCol = way_i % 10;
 
 		field[ row ][ col ].isFilled = false;
-		field[ nextRow ][ nextCol ].color =  field[ row ][ col ].color;
+		field[ nextRow ][ nextCol ].color = field[ row ][ col ].color;
 
 		field[ nextRow ][ nextCol ].isFilled = true;
 
@@ -82,13 +80,13 @@ void Field::Move( HDC hDc, int fromRow, int fromCol, int destRow, int destCol )
 
 Coordinate Field::GetFirstCircle( const Coordinate& startCoordinate, const Direction& direction )const
 {
-	int col = startCoordinate.row;
-	int row = startCoordinate.col;
+	int row = startCoordinate.row;
+	int col = startCoordinate.col;
 
 	Coordinate result;
 
-	while( //row > 0 && col > 0 &&
-		field[ startCoordinate.col ][ startCoordinate.row ].color ==
+	while( row > 0 && col > 0 &&
+		field[ startCoordinate.row ][ startCoordinate.col ].color ==
 		field[ row ][ col ].color )
 	{
 		row -= direction.plusToRow;
@@ -154,10 +152,10 @@ CircleGroup Field::GetSameColoredCircles( const Coordinate& startCoordinate )con
 	return result;
 }
 
-bool Field::EraseCircles( const CircleGroup& cg )
+void Field::EraseCircles( const CircleGroup& cg )
 {
 	if( !cg.isErase )
-		return false;
+		return ;
 
 	int row = cg.firstCircle.row,
 		col = cg.firstCircle.col;
@@ -168,50 +166,5 @@ bool Field::EraseCircles( const CircleGroup& cg )
 
 		row += cg.moveDir.plusToRow;
 		col += cg.moveDir.plusToCol;
-	}
-
-	return true;
-}
-
-void Field::FillWithRandColors( )
-{
-	srand( time( 0 ) ) ;
-
-	int colorsAssigned = 0;
-
-	int randRow = 0, randCol = 0, randColor = 0;
-
-	while( colorsAssigned < 3 )
-	{
-		randRow = 0 + rand( ) % NUMSQUARES;
-		randCol = 0 + rand( ) % NUMSQUARES;
-
-		if( !field[ randRow ][ randCol ].isFilled )
-		{
-			randColor = 0 + rand( ) % 5;
-			Color color = BLACK;
-			switch( randColor )
-			{
-			case 0:
-				color = BLUE;
-				break;
-			case 1:
-				color = RED;
-				break;
-			case 2:
-				color = GREEN;
-				break;
-			case 3:
-				color = YELLOW;
-				break;
-			case 4 :
-				color = AQUA;
-			}
-
-			field[ randRow ][ randCol ].color = color;
-			field[ randRow ][ randCol ].isFilled = true;
-			
-			colorsAssigned ++;
-		}
 	}
 }
