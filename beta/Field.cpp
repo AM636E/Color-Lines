@@ -1,6 +1,8 @@
 #include "Field.h"
 #include "Moves.h"
 
+#include <ctime>
+
 void Field::Draw( HDC hDc )
 {
 	int left = 0, top = 0;
@@ -41,13 +43,13 @@ void Field::Draw( HDC hDc )
 	}
 }
 
-void Field::Move( HDC hDc, int fromRow, int fromCol, int destRow, int destCol )
+bool Field::Move( HDC hDc, int fromRow, int fromCol, int destRow, int destCol )
 {
 	int **labirint = FormLabirintFromField( *this );
 	int *way = GenerateWayToDest( *this, fromRow + 1, fromCol + 1, destRow + 1, destCol + 1 );
 
 	if( !way )
-		return ;
+		return false;
 
 	int size = way[ 0 ];
 	int i = 1;
@@ -55,7 +57,7 @@ void Field::Move( HDC hDc, int fromRow, int fromCol, int destRow, int destCol )
 	int row = 0, col = 0;
 	int nextRow = 0, nextCol = 0;
 
-	for( int i = 1; i < size - 1; i ++ )
+	for( i = 1; i < size - 1; i ++ )
 	{
 		way_i = way[ i ];
 		row = way_i / 10;
@@ -67,7 +69,7 @@ void Field::Move( HDC hDc, int fromRow, int fromCol, int destRow, int destCol )
 		nextCol = way_i % 10;
 
 		field[ row ][ col ].isFilled = false;
-		field[ nextRow ][ nextCol ].color = field[ row ][ col ].color;
+		field[ nextRow ][ nextCol ].color =  field[ row ][ col ].color;
 
 		field[ nextRow ][ nextCol ].isFilled = true;
 
@@ -75,26 +77,39 @@ void Field::Move( HDC hDc, int fromRow, int fromCol, int destRow, int destCol )
 
 		Sleep( 100 );
 	}
+
+	changes[ 3 ].row = destRow;
+	changes[ 3 ].col = destCol;
+
+	return true;
 }
 
 
 Coordinate Field::GetFirstCircle( const Coordinate& startCoordinate, const Direction& direction )const
 {
-	int row = startCoordinate.row;
-	int col = startCoordinate.col;
+	int col = startCoordinate.row;
+	int row = startCoordinate.col;
 
 	Coordinate result;
 
 	while( row > 0 && col > 0 &&
-		field[ startCoordinate.row ][ startCoordinate.col ].color ==
-		field[ row ][ col ].color )
+		field[ startCoordinate.col ][ startCoordinate.row ].color ==
+		field[ row ][ col ].color &&
+		field[ row ][ col ].isFilled
+		)
 	{
 		row -= direction.plusToRow;
 		col -= direction.plusToCol;
 	}
+	if( field[ row ][ col ].color == field[ startCoordinate.row ][ startCoordinate.col ].color && field[ row ][ col ].isFilled )
+	{
+		result.row = row;
+		result.col = col;
 
+		return result;
+	}
 	result.row = row + direction.plusToRow;
-	result.col = col + direction.plusToCol;
+	result.col = col + direction.plusToCol;	
 
 	return result;
 }
@@ -140,8 +155,9 @@ CircleGroup Field::GetSameColoredCircles( const Coordinate& startCoordinate )con
 			count ++;
 		}
 		if( count >= 5 )
+		{
 			break;
-
+		}
 	}
 
 	result.countOfCircles = count;
@@ -152,13 +168,15 @@ CircleGroup Field::GetSameColoredCircles( const Coordinate& startCoordinate )con
 	return result;
 }
 
-void Field::EraseCircles( const CircleGroup& cg )
+bool Field::EraseCircles( const CircleGroup& cg )
 {
 	if( !cg.isErase )
-		return ;
+		return false;
 
 	int row = cg.firstCircle.row,
 		col = cg.firstCircle.col;
+
+	numEmptySquares += cg.countOfCircles;
 
 	for( int i = 0; i < cg.countOfCircles; i ++ )
 	{
@@ -167,4 +185,54 @@ void Field::EraseCircles( const CircleGroup& cg )
 		row += cg.moveDir.plusToRow;
 		col += cg.moveDir.plusToCol;
 	}
+
+	return true;
+}
+
+void Field::FillWithRandColors( )
+{
+	srand( time( 0 ) ) ;
+
+	int colorsAssigned = 0;
+
+	int randRow = 0, randCol = 0, randColor = 0;
+
+	while( colorsAssigned < 3 && numEmptySquares >= 3 )
+	{
+		randRow = 0 + rand( ) % NUMSQUARES;
+		randCol = 0 + rand( ) % NUMSQUARES;
+
+		if( !field[ randRow ][ randCol ].isFilled )
+		{
+			randColor = 0 + rand( ) % 5;
+			Color color = BLACK;
+			switch( randColor )
+			{
+			case 0:
+				color = BLUE;
+				break;
+			case 1:
+				color = RED;
+				break;
+			case 2:
+				color = GREEN;
+				break;
+			case 3:
+				color = YELLOW;
+				break;
+			case 4 :
+				color = AQUA;
+			}
+
+			field[ randRow ][ randCol ].color = color;
+			field[ randRow ][ randCol ].isFilled = true;
+
+			changes[ colorsAssigned ].row = randRow;
+			changes[ colorsAssigned ].col = randCol;
+
+			colorsAssigned ++;
+		}
+	}
+
+	numEmptySquares -= 3;
 }
